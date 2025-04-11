@@ -21,4 +21,15 @@ export class DeviceRepository extends BaseRepository<Device> {
       },
     });
   }
+
+  async assignToPatient(deviceId: string, patientId: string): Promise<Device> {
+    return this.model.update({
+      where: { id: deviceId },
+      data: {
+        patient: {
+          connect: { id: patientId },
+        },
+      },
+    });
+  }
 }

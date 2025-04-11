@@ -2,9 +2,57 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type PaginationTotal {
+  pages: Int!
+  records: Int!
+}
+
+type PaginationMetadata {
+  page: Int!
+  limit: Int!
+  total: PaginationTotal!
+}
+
+type Device {
+  id: ID!
+  serialNo: String!
+  type: String!
+  patientId: String
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Patient {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: ID!
+  name: String!
+  age: String!
+  gender: GENDER!
+  email: String
+  phone: String
+  address: String
+  dob: DateTime
+  bloodGroup: String
+  notes: String
+  createdAt: DateTime!
+  updatedAt: DateTime
+  deletedAt: DateTime
+  Device: [Device!]
+}
+
+enum GENDER {
+  MALE
+  FEMALE
+}
+
+type PaginatedPatient {
+  data: [Patient!]
+  metadata: PaginationMetadata
 }
 
 type User {
@@ -16,15 +64,18 @@ type User {
   deletedAt: DateTime
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type Query {
   healthCheck: String!
-  patient(id: Int!): Patient!
+  patient_list(paginationDto: PaginationDto!): PaginatedPatient!
   user_signin(userSignInInput: UserSignUpInput!): String!
+}
+
+input PaginationDto {
+  """Page number."""
+  page: Float!
+
+  """Page size."""
+  limit: Float!
 }
 
 input UserSignUpInput {
@@ -33,19 +84,46 @@ input UserSignUpInput {
 }
 
 type Mutation {
-  createPatient(createPatientInput: CreatePatientInput!): Patient!
-  updatePatient(updatePatientInput: UpdatePatientInput!): Patient!
-  removePatient(id: Int!): Patient!
+  patient_create(createPatientInput: CreatePatientInput!): Patient!
+  patient_update(updatePatientInput: UpdatePatientInput!): Patient!
+  patient_remove(id: String!): String!
   user_signup(userSignUpInput: UserSignUpInput!): User!
+  device_create(createDeviceInput: CreateDeviceInput!): Device!
+  device_assign(assignDeviceInput: AssignDeviceInput!): Device!
+  device_process(signal: String!): String!
 }
 
 input CreatePatientInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
+  age: Float!
+  gender: GENDER!
+  email: String
+  phone: String
+  address: String
+  dob: DateTime
+  bloodGroup: String
+  notes: String
 }
 
 input UpdatePatientInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  name: String
+  age: Float
+  gender: GENDER
+  email: String
+  phone: String
+  address: String
+  dob: DateTime
+  bloodGroup: String
+  notes: String
+  id: ID!
+}
+
+input CreateDeviceInput {
+  serialNo: String!
+  type: String!
+}
+
+input AssignDeviceInput {
+  patientId: String!
+  deviceId: String!
 }

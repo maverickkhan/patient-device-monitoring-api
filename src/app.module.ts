@@ -10,13 +10,14 @@ import { ResourcesModule } from './resources/resources.module';
 import { AppResolver } from './app.resolver';
 import { join } from 'path';
 import { JwtModule } from '@nestjs/jwt';
+import { JWT_SECRET } from './common';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     JwtModule.register({
       global: true,
-      secret: 'top-secret', //TODO: change this later
+      secret: JWT_SECRET,
       signOptions: { expiresIn: '300s' },
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({

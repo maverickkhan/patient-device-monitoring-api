@@ -25,10 +25,12 @@ export abstract class BaseRepository<T extends { id: string }> {
     return this.model.findMany();
   }
 
-  async findAllPaginated(page: number, limit: number): Promise<T[]> {
+  async findAllPaginated(pagination: {skip: number, take: number}): Promise<T[]> {
     return this.model.findMany({
-      skip: (page - 1) * limit,
-      take: limit,
+      ...pagination,
+      where: {
+        deletedAt: null,
+      },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -40,8 +42,15 @@ export abstract class BaseRepository<T extends { id: string }> {
   async delete(id: string): Promise<T> {
     return this.model.update({ where: { id }, data: { deletedAt: new Date()} });
   }
+  async count(where: Partial<T> = {}): Promise<number> {
+    return this.model.count({ where: {
+      ...where,
+      deletedAt: null,
+    } });
+  }
 
   private generateId(prefix: string): string {
     return `${prefix}_${createId()}`
   }
+
 }
