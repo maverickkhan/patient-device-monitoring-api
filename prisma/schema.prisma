@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum GENDER {
+  MALE
+  FEMALE
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
+}
+
+model Patient {
+  id         String       @id @default(cuid())
+  name       String
+  age        Int
+  gender     GENDER       @default(MALE)
+  email      String?     
+  phone      String?     
+  address    String?
+  dob        DateTime?
+  bloodGroup String?
+  notes      String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime?    @updatedAt
+  deletedAt  DateTime?
+  Device     Device[]
+  DeviceData DeviceData[]
+  
+  @@unique([email, phone])
+}
+
+model Device {
+  id         String       @id @default(cuid())
+  serialNo   String       @unique
+  type       String
+  patientId  String?
+  patient    Patient?     @relation(fields: [patientId], references: [id])
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime?    @updatedAt
+  deletedAt  DateTime?
+  DeviceData DeviceData[]
+}
+
+model DeviceData {
+  id        String   @id @default(cuid())
+  deviceId  String
+  device    Device   @relation(fields: [deviceId], references: [id])
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  timestamp DateTime
+  pulse     Int?
+  systolic  Int?
+  diastolic Int?
+  o2sat     Int?
+  createdAt DateTime @default(now())
+}
