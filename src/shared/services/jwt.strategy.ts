@@ -13,9 +13,7 @@ import { PrismaService } from './prisma.service';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   logger = new Logger(JwtStrategy.name);
-  constructor(
-    private readonly prisma: PrismaService,
-  ) {
+  constructor(private readonly prisma: PrismaService) {
     super({
       secretOrKey: JWT_SECRET,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -26,12 +24,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     try {
       const user = await this.prisma.user.findFirst({
         where: {
-            id: payload.id,
-            deletedAt: null
+          id: payload.id,
+          deletedAt: null,
         },
       });
       if (!user) {
-        throw new UnauthorizedException('User not found')
+        throw new UnauthorizedException('User not found');
       }
       return omit(user, ['password']);
     } catch (error) {

@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { ObjectType, Field, ID } from '@nestjs/graphql';
 
 @ObjectType()
 export class Device {
@@ -14,9 +14,6 @@ export class Device {
   @Field(() => String, { nullable: true })
   patientId: string;
 
-  // @Field(() => String, {nullable:false})
-  // patient:    patient?
-
   @Field(() => Date, { nullable: false })
   createdAt: Date;
 
@@ -25,7 +22,4 @@ export class Device {
 
   @Field(() => Date, { nullable: true })
   deletedAt?: Date;
-
-  // @Field(() => String, {nullable:false})
-  // DeviceData: devicedata
 }

@@ -13,6 +13,23 @@ type PaginationMetadata {
   total: PaginationTotal!
 }
 
+type DeviceData {
+  id: ID!
+  deviceId: String!
+  patientId: String!
+  timestamp: DateTime!
+  pulse: Int
+  systolic: Int
+  diastolic: Int
+  o2sat: Int
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Device {
   id: ID!
   serialNo: String!
@@ -22,11 +39,6 @@ type Device {
   updatedAt: DateTime
   deletedAt: DateTime
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Patient {
   id: ID!
@@ -43,6 +55,7 @@ type Patient {
   updatedAt: DateTime
   deletedAt: DateTime
   Device: [Device!]
+  DeviceData: [DeviceData!]!
 }
 
 enum GENDER {

@@ -27,7 +27,7 @@ import { JWT_SECRET } from './common';
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     SharedModule,
-    ResourcesModule
+    ResourcesModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

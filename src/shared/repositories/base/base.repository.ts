@@ -1,31 +1,36 @@
-import { PrismaService } from "../../services/prisma.service";
-import {createId} from '@paralleldrive/cuid2';
+import { PrismaService } from '../../services/prisma.service';
+import { createId } from '@paralleldrive/cuid2';
 
 export abstract class BaseRepository<T extends { id: string }> {
   protected abstract model: any;
   protected abstract prefix: string;
 
-  constructor(protected readonly prisma: PrismaService) {
-  }
-  
-  async create(data: Partial<T>): Promise<T> {
-    return this.model.create({ 
+  constructor(protected readonly prisma: PrismaService) {}
+
+  create(data: Partial<T>): Promise<T> {
+    return this.model.create({
       data: {
         id: this.generateId(this.prefix),
         ...data,
-      }
-     });
+      },
+    });
   }
 
-  async findById(id: string): Promise<T | null> {
+  findById(id: string): Promise<T | null> {
     return this.model.findUnique({ where: { id } });
   }
 
-  async findAll(): Promise<T[]> {
+  findAll(): Promise<T[]> {
     return this.model.findMany();
   }
+  
+  findMany(where: Partial<T>): Promise<T[]> {
+    return this.model.findMany({
+      where
+    });
+  }
 
-  async findAllPaginated(pagination: {skip: number, take: number}): Promise<T[]> {
+  findAllPaginated(pagination: { skip: number; take: number }): Promise<T[]> {
     return this.model.findMany({
       ...pagination,
       where: {
@@ -40,17 +45,21 @@ export abstract class BaseRepository<T extends { id: string }> {
   }
 
   async delete(id: string): Promise<T> {
-    return this.model.update({ where: { id }, data: { deletedAt: new Date()} });
+    return this.model.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
   }
   async count(where: Partial<T> = {}): Promise<number> {
-    return this.model.count({ where: {
-      ...where,
-      deletedAt: null,
-    } });
+    return this.model.count({
+      where: {
+        ...where,
+        deletedAt: null,
+      },
+    });
   }
 
   private generateId(prefix: string): string {
-    return `${prefix}_${createId()}`
+    return `${prefix}_${createId()}`;
   }
-
 }

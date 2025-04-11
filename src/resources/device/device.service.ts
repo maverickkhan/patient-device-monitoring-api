@@ -5,7 +5,6 @@ import {
   Logger,
 } from '@nestjs/common';
 import { CreateDeviceInput } from './dto/create-device.input';
-import { UpdateDeviceInput } from './dto/update-device.input';
 import { DeviceRepository } from 'src/shared/repositories/device.repository';
 import { AssignDeviceInput } from './dto/assign-device.input';
 import { ParserService } from 'src/shared/services/parser/parser.service';
@@ -53,8 +52,8 @@ export class DeviceService {
     try {
       const { deviceId, ...parsedData } =
         this.parser.processDeviceData(rawData);
-        const device = await this.deviceRepo.findById(deviceId);        
-    
+      const device = await this.deviceRepo.findById(deviceId);
+
       if (!device) {
         this.logger.warn(`Device not found`);
         throw new BadRequestException(
@@ -70,11 +69,11 @@ export class DeviceService {
       }
 
       await this.deviceDataRepo.create({
-          deviceId,
-          patientId: device.patientId,
-          ...parsedData,
-        });
-        return `Signal Process Successfully`
+        deviceId,
+        patientId: device.patientId,
+        ...parsedData,
+      });
+      return `Signal Process Successfully`;
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException(error);

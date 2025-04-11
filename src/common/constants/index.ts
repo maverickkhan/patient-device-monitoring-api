@@ -1,2 +1,2 @@
-export * from './system'
-export * from './pagination.dto'
+export * from './system';
+export * from './pagination.dto';

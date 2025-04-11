@@ -1,6 +1,7 @@
-import { ObjectType, Field, Int, ID, registerEnumType } from '@nestjs/graphql';
+import { ObjectType, Field, ID, registerEnumType } from '@nestjs/graphql';
 import { GENDER } from '@prisma/client';
 import { Paginated } from 'src/common/helpers/pagination.entity';
+import { DeviceData } from 'src/resources/device/entities/device-data.entity';
 import { Device } from 'src/resources/device/entities/device.entity';
 
 registerEnumType(GENDER, {
@@ -50,8 +51,8 @@ export class Patient {
   @Field(() => [Device], { nullable: true })
   Device: Device[];
 
-  // @Field(() => String, { nullable: false })
-  // DeviceData: string;
+  @Field(() => [DeviceData], { nullable: false })
+  DeviceData: DeviceData[];
 }
 
 @ObjectType()
