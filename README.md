@@ -41,6 +41,12 @@ npm run start:dev
 
 ## 🧪 How to Use the API
 
+After project started successfully go to
+
+```bash
+http://localhost:3000/graphql
+```
+
 ### ✅ Create User (Signup)
 Call `user_signup` with `email` and `password`.
 
